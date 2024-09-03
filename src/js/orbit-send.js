@@ -456,7 +456,7 @@ async function main()
           let batchStartPacketNo = 0
           //Allows the file to be saved
           const fileHandle = await showSaveFilePicker({
-            _preferPolyfill: true,
+            _preferPolyfill: false,
             suggestedName: message.dataObj.fileName,
             excludeAcceptAllOption: false
           })
