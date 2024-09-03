@@ -152,7 +152,7 @@
           <p class="margin-10px">Please note that two devices connected to the internet through mobile data cannot
             directly communicate here, however nearby they are. You will have to follow <a class="link guide-page-link" >this guide</a> to get 
             them to the same mobile hotspot network or connect both devices to the same wifi network.</p>
-            <p class="margin-10px">This website is open source. Read the <a class="link external" src="https://github.com/Irobot-2000/orbit-send">source code at github</a></p>
+            <p class="margin-10px">This website is open source. Read the <a class="link external" href="https://github.com/Irobot-2000/orbit-send">source code at github</a></p>
           <p class="margin-10px">Thank you for choosing Orbit Send. Files and text transferred in this website are
             tranferred directly between the sender and receiver without passing through a server.</p>
           <div class="flex flex-row align-items-center justify-content-center">

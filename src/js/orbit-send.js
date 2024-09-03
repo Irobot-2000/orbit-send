@@ -38,7 +38,7 @@ async function main()
   const NOTIFICATION_ACTIVE_TIME = 3000
   //File constants
   //roughly 100MB in one batch
-  const FILE_MAX_PACKETS_IN_BATCH = 6250
+  const FILE_MAX_PACKETS_IN_BATCH = 1000
   const FILE_PACKET_SIZE = 16000
   //3 bytes for the action, 4 for the packet number
   const FILE_PACKET_HEADER_SIZE = 3 + 4
@@ -563,19 +563,25 @@ async function main()
           peer.destroy()
           peers[peerId] = null
         }
-        peerData[peerId].fileData.receivedPackets++
+
         let hasReceivedPacketNo = peerData[peerId].fileData.hasReceivedPacketNo
         const batchStartPacketNo = peerData[peerId].fileData.batchStartPacketNo
         // The index of the ByteArray where the packet data is stored
         const batchByteOffset = (message.packetNo - batchStartPacketNo) * FILE_PACKET_SIZE
         //Store that the packet has been recieved
-        hasReceivedPacketNo[message.packetNo - batchStartPacketNo] = true
-        //console.log(peerData[peerId].fileData.batch, batchByteOffset, batchStartPacketNo)
-        peerData[peerId].fileData.batch.set(message.data, batchByteOffset)
-        if (!message.data)
+        if(!hasReceivedPacketNo[message.packetNo - batchStartPacketNo])
         {
-          console.log(message.data)
+          //if packet has not already been received
+          peerData[peerId].fileData.receivedPackets++
+          hasReceivedPacketNo[message.packetNo - batchStartPacketNo] = true
+          //console.log(peerData[peerId].fileData.batch, batchByteOffset, batchStartPacketNo)
+          peerData[peerId].fileData.batch.set(message.data, batchByteOffset)
+          if (!message.data)
+          {
+            console.log(message.data)
+          }
         }
+
       }
       else if (message.action == END_FILE)
       {
@@ -787,7 +793,7 @@ async function main()
               {
                 //send packet
                 packetsSent++
-                await sendPacket(file, peer, packetNo, totalPackets, action)
+                sendPacket(file, peer, packetNo, totalPackets, action)
               }
               //Don't worry, we will break out of the loop later
               while (true)
