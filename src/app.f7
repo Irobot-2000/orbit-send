@@ -1,0 +1,186 @@
+<template>
+  <div id="app" style="overflow:auto">
+    <div class="panel panel-right panel-cover" id="notifications-panel">
+      <p class="show-if-empty margin-10px">No notifications yet</p>
+    </div>
+
+    <div class="navbar position-sticky">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding flex flex-row justify-content-space-between">
+        <div class="title">
+          <div class="flex flex-row align-items-center">
+            <div class="circle-icon logo" alt="O"></div>\u00A0\u00A0Orbit Send
+          </div>
+        </div>
+        <div class="flex flex-row align-items-center">
+          <i class="material-icons" id="help-icon">help</i>
+          <div class="small-icon margin-10px toggle-theme-icon">
+            <i class="material-icons  light-only">dark_mode</i>
+            <i class="material-icons  dark-only">light_mode</i>
+          </div>
+          <i class="material-icons " id="notifications-icon">notifications</i>
+          <div class="circle-icon margin-10px" id="profile-icon"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popover" id="name-popover">
+      <div class="popover-arrow"></div>
+
+      <div class="popover-inner flex flex-row">
+        <button class="button button-tonal margin-10px">Change Name (current : <a id="current-name">Name</a>)</button>
+      </div>
+    </div>
+
+
+    <div class="tabs">
+      <div id="file-share" class="tab tab-active">
+
+        <div class="card">
+          <div class="card-header">Searching for devices...</div>
+          <div class="card-content flex flex-row overflow-auto" id="main-peer-display">
+            <div class="device-icon card">
+              <div class="skeleton-block skeleton-effect-fade circle-icon">?</div>
+              <label class="skeleton-effect-fade">Searching...</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-row position-sticky z-index-10 background-opaque" style="top:60px">
+          <button class="button button-tonal margin-10px" id="share-all-files">Share all files</button>
+          <button class="button button-tonal margin-10px" id="share-selected-files">Share selected files</button>
+        </div>
+        <div class="flex flex-row align-items-center position-sticky z-index-10 background-opaque" style="top:120px">
+          <label class="checkbox margin-10px no-fastclick">
+            <!-- checkbox input -->
+            <input type="checkbox" id="selected-all-checkbox" />
+            <!-- checkbox icon -->
+            <i class="icon-checkbox"></i>
+          </label>
+          Select all files :\u00A0<label id="selection-counter">none</label>\u00A0selected
+        </div>
+        <div class="" id="file-display-area">
+          <div class="card button file" id="file-add-button">
+            <i class="material-icons  large-icon">add</i>
+            <label>Add or drop files</label>
+          </div>
+        </div>
+      </div>
+      <div id="chat-share" class="tab">
+
+      </div>
+      <div id="camera-share" class="page-content tab">
+        <video id="camera-viewer-video"></video>
+        <h1 class="margin-10px">Who do you want to share camera access to?</h1>
+        <div id="camera-peer-display" class="grid">
+          <label class="show-if-empty margin-10px">Sorry but there are no peers to connect to yet. Ask someone on the
+            same network to visit this web page</label>
+        </div>
+
+        <div class="z-index-10 link flex flex-row" id="exit-camera">
+          <i class="material-icons">arrow_back</i>
+          <a class="margin-10px">Go back</a>
+        </div>
+        <div class="flex flex-column justify-content-center align-items-center z-index-10" id="camera-controls">
+          <div>
+            <!--Empty div for layout-->
+          </div>
+          <button class="button margin-10px circle-icon link" id="take-photo-button">
+            <i class="material-icons">photo_camera</i>
+          </button>
+          <button class="button margin-10px circle-icon link" id="take-video-button">
+            <i class="material-icons">videocam</i>
+          </button>
+          <button class="button margin-10px circle-icon link" id="switch-camera-button">
+            <i class="material-icons">cameraswitch</i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar tabbar-icons toolbar-bottom" style="position:fixed">
+      <div class="toolbar-inner">
+        <a href="#file-share" class="tab-link tab-link-active">
+          <i class="icon material-icons " id="file-share-icon">description</i>
+          <span class="tabbar-label">files</span>
+        </a>
+        <a href="#chat-share" class="tab-link">
+          <i class="icon material-icons " id="chat-share-icon">chat</i>
+          <span class="tabbar-label">chat</span>
+        </a>
+        <a href="#camera-share" class="tab-link">
+          <i class="icon material-icons " id="camera-share-icon">camera</i>
+          <span class="tabbar-label">camera</span>
+        </a>
+      </div>
+    </div>
+    <label class="drop-area-label">
+      Drop files here
+    </label>
+    <div style="display:none" id="hidden">
+      <div class="modal flex flex-column" id="peer-selector-modal">
+        <div class="card modal-container flex flex-column">
+          <div class="modal-header flex flex-column">
+            <div class="flex-row flex">
+              <h1>Select who to share with</h2><i class="material-icons " id="close-peer-modal">close</i>
+            </div>
+            <div class="flex flex-row">
+              <button class="button button-tonal margin-10px" id="peer-select-all">Select all</button>
+              <button class="button button-tonal margin-10px" id="peer-deselect-all">Deselect all</button>
+            </div>
+          </div>
+          <div id="selector-peer-display" class="modal-body grid">
+            <p class="show-if-empty margin-10px">No peers available yet. Ask someone in the same network to visit this
+              website.</p>
+          </div>
+          <div class="modal-footer flex flex-row ">
+            <button class="button button-tonal margin-10px" id="peer-send">Send</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal flex flex-column" id="introduction-modal">
+        <div class="card modal-container">
+          <div class="modal-header flex flex-row align-items-center justify-content-space-between">
+            <h1 class="margin-10px">Welcome to Orbit Send!</h1>
+            <i class="material-icons close-introduction-modal">close</i>
+          </div>
+          <p class="margin-10px">This is a website that allows you to share files, text, or camera access to devices in
+            the same local area network, so it should be possible to share data to devices nearby.</p>
+          <p class="margin-10px">If this is your first time visiting this website you could take part in the automated <a class="link guided-tour-button">guided tour</a>.</p>
+          <p class="margin-10px">Don't have a secure wifi network nearby? Follow <a class="link guide-page-link">this guide</a> to connect devices through
+            mobile hotspot.</p>
+          <p class="margin-10px">Please note that two devices connected to the internet through mobile data cannot
+            directly communicate here, however nearby they are. You will have to follow <a class="link guide-page-link" >this guide</a> to get 
+            them to the same mobile hotspot network or connect both devices to the same wifi network.</p>
+            <p class="margin-10px">This website is open source. Read the <a class="link external" src="https://github.com/Irobot-2000/orbit-send">source code at github</a></p>
+          <p class="margin-10px">Thank you for choosing Orbit Send. Files and text transferred in this website are
+            tranferred directly between the sender and receiver without passing through a server.</p>
+          <div class="flex flex-row align-items-center justify-content-center">
+            <h2 class="margin-10px">You are now visible to others as </h2>
+            <div class="margin-10px device-icon card">
+              <div class="circle-icon" id="insert-icon-here"></div>
+              <div id="insert-name-here"></div>
+            </div>
+          </div>
+          <div class="modal-footer flex flex-row">
+            <button class="button button-tonal guided-tour-button margin-10px">Show guided tour</button>
+            <button class="button button-tonal close-introduction-modal margin-10px">Close this modal window</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-column align-items-center justify-content-center" id="loader">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200px" height="200px">
+        <path class="squiggle-animation" fill="none" stroke="var(--squiggle-color)"  stroke-width="3" d="M 87 0.3 C 81.1 0.8 73.4 2.6 66.3 5.2 C 64.5 5.8 62.7 6.5 62.1 6.7 C 59.1 7.8 49.6 12.7 45.4 15.5 C 35 22.2 25.5 31.2 18.5 41 C 12.5 49.4 7.5 59.1 4.4 68.5 C 1.4 77.3 -0.2 87.4 0.1 94.5 C 0.1 96.3 0.2 96.1 0.2 93.5 C 0.2 91.7 0.4 90 0.5 89.7 C 0.6 89.3 0.9 87.5 1.2 85.6 C 3.3 71.1 8.3 58.1 16.6 45.3 C 23.8 34 34 23.9 45.3 16.6 C 51.9 12.3 59 8.7 65.5 6.3 C 74.9 2.9 85.7 0.6 94.3 0.3 L 98.1 0.1 L 93.6 0.1 C 91.2 0.1 88.2 0.2 87 0.3 M 98.4 0.2 C 98.6 0.2 98.9 0.2 99.1 0.2 C 99.2 0.1 99.1 0 98.8 0 C 98.4 0 98.3 0.1 98.4 0.2 M 104.9 0.2 C 107.8 0.3 110.2 0.5 110.4 0.5 C 110.5 0.6 111.7 0.8 112.9 1 C 125.8 2.7 138.1 6.8 149.5 13.5 C 157.8 18.2 163 22.1 169.2 28.1 C 177.4 36.1 184.1 45.1 189.4 55.7 C 194.6 66.2 197.3 75 199.1 88.1 C 199.7 92 199.8 93.3 199.8 100 C 199.8 107.9 199.5 110.5 198.2 117.8 C 195.8 131.2 191.2 142.5 183.2 155 C 176.1 166 166.3 175.8 155.6 182.8 C 141.1 192.3 128.6 196.9 110.9 199.2 C 105.6 200 94.3 200 89 199.2 C 75.9 197.4 67.2 194.9 57.1 190 C 36.2 179.9 20.9 164.8 10.6 144.1 C 6.1 135.3 3.1 126.1 1.6 116.8 C 1.3 114.6 0.8 112 0.6 111 C 0.4 110 0.2 107.8 0.2 106.1 C 0.2 103.6 0.1 103.5 0.1 105.1 C -0.1 108.6 0.5 115.6 1.3 119.5 C 2.5 125.8 3.8 130.1 6.7 137.9 C 7.2 139.2 12.1 149.1 12.9 150.4 C 13.2 150.9 13.7 151.7 13.9 152.1 C 14.7 153.6 18.4 158.9 20.1 161.3 C 24.5 166.9 30.4 173.1 34.9 176.7 C 36 177.6 36.9 178.4 37 178.5 C 37.5 179.1 44.1 183.7 47.5 185.9 C 54 190 66.4 195.4 72.9 197 C 73.4 197.1 75 197.5 76.5 197.9 C 83.4 199.6 87.4 200 100 200 C 114.1 200 117.7 199.6 127.6 196.8 C 135 194.7 143.4 191.2 149.9 187.4 C 150.7 186.9 151.7 186.3 152.1 186.1 C 153.4 185.4 158.5 181.9 160.8 180.2 C 169.6 173.6 177.5 165.2 183.8 155.8 C 187 150.9 190.7 143.9 193.7 137 C 194.2 135.8 196.5 128.9 196.9 127.4 C 199.7 116.5 200 114 200 100 C 200 87.4 199.7 83.7 197.9 76.6 C 196.4 70.3 194.5 64.7 192.4 60.1 C 191.3 57.6 187.8 50.8 187.1 49.6 C 186.8 49.1 186.3 48.3 186.1 47.9 C 185.9 47.5 184.9 45.9 183.9 44.5 C 177.3 34.5 169.1 25.9 159.5 18.9 C 156.8 16.8 156.3 16.6 153.9 15 C 145 9.3 134.7 4.9 124.6 2.4 C 117.3 0.6 112.5 -0 104.9 0.1 L 99.6 0.1 L 104.9 0.2 M 92.1 9.2 C 86.1 9.9 80 11.2 74.1 13.1 C 69.6 14.6 63.1 17.4 59.7 19.4 C 58.8 19.9 56.9 21 55.5 21.8 C 52.3 23.6 46.4 28 42.5 31.5 C 30.9 41.8 21.7 55.7 16.7 70.5 C 14.7 76.7 13.6 81.2 12.7 88 C 12.2 91.5 12.1 93.3 12.1 99.1 C 12.1 109.3 13 115.3 15.6 124.8 C 18.9 136.4 26.6 150.1 35.2 159.7 C 42.1 167.2 48.3 172.3 56.6 177.2 C 68.7 184.2 78.6 187.5 91.5 188.9 C 95.7 189.3 105.7 189.4 108.7 189 C 120.6 187.4 126.8 185.7 136.2 181.3 C 153.2 173.4 167 160.5 176.7 143.8 C 181.8 134.8 184.7 126.9 187 115.8 C 188.3 109.3 189 99 188.5 93.9 C 188.4 92.4 188.2 89.9 188 88.5 C 187.2 80.7 184.6 70.5 181.4 63.4 C 177 53.2 172.4 46.1 165 37.9 C 157.3 29.3 145.9 21 135.5 16.5 C 134.2 16 132.9 15.4 132.7 15.2 C 132 14.8 130.7 14.4 125.9 12.8 C 121.1 11.3 113.4 9.7 109 9.2 C 103.8 8.7 97 8.7 92.1 9.2 M 106.1 10 C 109.9 10.3 114.2 11 118.3 11.9 C 121.4 12.5 131.1 15.5 131.9 16.1 C 132.2 16.3 133.4 16.9 134.7 17.4 C 137.3 18.4 140.9 20.2 142.4 21.2 C 142.9 21.6 143.9 22.2 144.6 22.6 C 147.1 23.9 148 24.5 149.4 25.5 C 151.3 27 151.1 26.8 153 28.2 C 155.2 29.7 161.2 35.2 163.5 37.8 C 167.3 42 172 47.9 172.4 48.9 C 172.5 49.2 172.8 49.7 173.1 50.1 C 175 52.6 179.8 62 181.5 66.4 C 185.9 77.3 188.2 91.2 187.5 102.6 C 186.6 118.9 182.4 132.5 174 146 C 173.3 147.2 172.6 148.3 172.4 148.6 C 169.1 154.1 161.3 162.9 155 168.1 C 152.1 170.5 148.5 173.3 148.2 173.3 C 148 173.3 147.7 173.5 147.4 173.7 C 146.9 174.1 143.9 176 139.8 178.3 C 139.1 178.7 137.3 179.5 135.8 180.3 C 134.2 181 132.3 181.8 131.5 182.2 C 129.7 183 124.3 184.8 120.8 185.7 C 110.2 188.5 98.1 189 86.4 187.1 C 83.8 186.7 76.8 185 74.7 184.3 C 63.5 180.4 50.4 172.9 43.6 166.5 C 42.9 165.8 41.9 164.9 41.4 164.5 C 39.4 162.8 33.6 156.3 31.1 152.9 C 29.7 151 28.5 149.4 28.5 149.3 C 28.5 149.1 27.7 147.8 26.8 146.3 C 24.2 142.2 22.2 138.5 20.5 134.7 C 13.1 117.9 11.2 99.8 14.9 81.6 C 15.6 77.8 16.7 73.8 17.6 71.3 C 18 70.4 18.6 68.8 18.9 67.8 C 20.2 64 23.9 56.6 27.1 51.5 C 31.5 44.3 33.2 42.2 40.3 35.2 C 44.5 31 47.5 28.4 48.6 28 C 49 27.9 49.3 27.7 49.3 27.5 C 49.3 27.1 53.8 24 56.6 22.6 C 57.6 22.1 58.7 21.4 59 21.2 C 60.1 20.3 65.9 17.4 70 15.8 C 81.2 11.2 94.6 9.1 106.1 10 M 94.2 44 C 88.5 44.7 81.9 46.7 76.4 49.4 C 71.9 51.6 71.7 51.8 68.1 54.4 C 61.4 59.2 59 61.8 53.2 69.9 C 52.4 71.1 49.3 77.1 48.3 79.5 C 47.5 81.5 45.8 87.5 45.2 90.9 C 44.6 93.9 44.2 100 44.4 103.5 C 44.9 112.9 47.2 120.8 51.8 129.1 C 52.6 130.5 53.4 131.8 53.5 131.9 C 53.6 132 54.7 133.3 55.9 134.9 C 58 137.7 62.9 142.9 64.7 144.1 C 65.1 144.4 66.7 145.5 68.2 146.5 C 69.7 147.5 72 149.1 73.4 149.9 C 79.7 153.7 88.5 156 98.4 156.6 C 104.3 157 113.4 155.5 119.9 153.1 C 123.6 151.7 129.6 148.5 132.5 146.3 C 138.3 142.1 141.2 139.1 145.8 133 C 148.4 129.6 151.7 123.2 153.1 118.9 C 154.7 114.1 155.7 108.4 155.7 104.5 C 155.8 101.4 155.9 101.5 150.7 101.5 C 145.7 101.5 145.9 101.4 145.7 104.6 C 145.1 112 143.1 118.2 138.9 125.3 C 138.2 126.6 136.9 128.4 136.1 129.4 C 135.3 130.3 134.4 131.4 134.2 131.7 C 133.7 132.5 129.4 136.4 127.9 137.5 C 127.2 138 125.8 138.9 124.9 139.4 C 116 144.6 107.8 146.8 98.8 146.4 C 91.4 146.1 85.5 144.6 79.5 141.6 C 69.9 136.8 64.2 131 59.1 120.9 C 56.4 115.4 55.2 111 54.5 104.1 C 54.2 101.4 54.2 100 54.5 97.1 C 55.1 89.4 57 83.4 61.1 76.4 C 61.6 75.5 62.2 74.5 62.5 73.9 C 63.9 71.4 69.7 65.3 73.4 62.6 C 76.1 60.6 82 57.4 84.9 56.4 C 91 54.2 95.8 53.4 102.1 53.6 C 108.3 53.8 112.2 54.6 117.8 56.8 C 121.3 58.2 121.5 58.1 122.8 56.1 C 125.6 51.9 126 50.6 125.2 49.6 C 124.5 48.9 118.6 46.5 115.4 45.7 C 109.2 44.1 106.7 43.7 100.9 43.8 C 98.1 43.8 95.1 43.9 94.2 44 M 107.4 45 C 111.6 45.5 116 46.7 120 48.3 C 123.8 49.8 124.9 50.4 124.6 50.9 C 124.3 51.8 121.4 56.6 121.1 56.7 C 120.9 56.7 119.7 56.4 118.5 55.9 C 108.6 52 98.5 51.4 88.1 54.2 C 84.5 55.2 82.6 55.9 79.6 57.5 C 76.4 59.2 74.9 60.2 72.3 62.2 C 52.1 77.8 47.4 105.5 61.3 127 C 65.4 133.4 70.8 138.3 78 142.1 C 85.3 145.9 93.4 147.7 102.1 147.4 C 109.5 147.2 115.6 145.6 122.2 142.1 C 136.4 134.7 145.4 121 146.7 104.9 L 146.9 102.6 L 150.8 102.6 L 154.6 102.6 L 154.7 104.1 C 154.8 106.1 154.4 109.7 153.6 113.2 C 150.5 127.3 141.1 140.2 128.6 147.6 C 115.9 155.2 102.1 157.4 87.5 154.1 C 77.9 152 68.5 146.8 61.2 139.5 C 54 132.3 48.9 122.9 46.6 112.8 C 45.6 108.4 45.4 105.5 45.6 98.9 C 45.7 93.2 45.7 92.7 46.6 89.1 C 47.9 83.3 48.6 81.2 50.8 76.9 C 53.1 72.1 54.6 69.5 56.8 66.7 C 61.9 59.9 68 54.8 76.1 50.7 C 82.2 47.6 87.9 45.8 94.6 44.9 C 96.3 44.7 105.6 44.8 107.4 45 M 131.6 48.4 C 131.1 49.1 130.2 50.2 129.6 51 C 127.8 53.2 127.8 53.4 132.2 57.6 L 135.9 61.3 L 131.9 63.3 C 123.7 67.4 115.1 73.1 108.6 78.8 C 105.5 81.5 100.4 86.6 98.2 89.3 C 92.2 96.4 91.6 97.5 92.7 98.4 C 93.6 99.1 97.3 101.9 98 102.3 C 99.2 103.1 99.7 102.7 103.3 98.5 C 110.1 90.6 118 83.4 123.6 80 C 125.9 78.6 127.1 77.9 127.7 77.4 C 129.5 75.9 141.6 69.5 141.9 69.8 C 142 69.9 140.1 72 137.8 74.5 C 134.5 77.9 133.5 79.2 133.5 79.7 C 133.5 80.2 134.1 81 136.1 82.9 C 138.8 85.7 139.6 86.3 140.4 86 C 140.7 85.9 143.7 83 147.1 79.4 C 150.4 75.8 154.2 71.9 155.5 70.7 C 156.7 69.4 157.8 68.2 157.8 68 C 157.8 67.7 157.9 67.2 158.1 66.9 C 158.3 66.2 158.3 66.1 157.6 65.5 C 156.8 64.8 152.7 61.7 148.6 58.6 C 147.3 57.6 145.1 55.9 143.8 54.9 C 142.6 53.9 140.6 52.4 139.4 51.5 C 138.3 50.6 136.6 49.3 135.7 48.6 C 133.5 46.8 132.9 46.8 131.6 48.4 M 138.6 52.2 C 141.4 54.3 146.7 58.4 150.4 61.3 C 154.2 64.2 157.3 66.7 157.3 66.9 C 157.3 67.1 154.9 69.7 151.9 72.7 C 146.3 78.5 142.7 82.3 141.4 83.8 C 140.1 85.4 140 85.3 137.2 82.6 C 135.9 81.2 134.8 79.9 134.8 79.7 C 134.8 79.2 137.1 76.7 143.8 69.9 C 145.4 68.3 146.8 66.8 146.8 66.7 C 146.8 66.4 146.2 66.5 145.5 66.9 C 145.2 67.1 144.1 67.6 142.9 68 C 136.1 70.5 123.8 77.9 116 84.2 C 112.5 87 105.5 94.1 102.1 98.2 C 100.6 100 99.2 101.5 99 101.5 C 98.8 101.5 97.4 100.6 95.9 99.5 C 93.5 97.7 93.3 97.4 93.5 97 C 94.3 95.5 99.5 89.3 103.5 85.2 C 110.8 77.5 121.4 69.9 133.3 63.9 C 135.8 62.6 137.2 61.7 137.2 61.5 C 137.2 61.3 135.5 59.4 133.4 57.3 C 131.2 55.1 129.5 53.3 129.5 53.1 C 129.5 52.6 132.9 48.3 133.3 48.3 C 133.5 48.3 135.9 50 138.6 52.2 M 94.6 61.9 C 88.1 62.9 82.1 65.5 77.1 69.4 C 68.9 75.9 64.3 83.4 62.4 93.4 C 61.8 96.5 61.7 103.6 62.3 106.6 C 63.7 113.6 65.9 118.8 69.5 123.6 C 72.7 127.9 75.7 130.5 81.1 133.8 C 84.2 135.7 87.8 137.1 92.8 138.2 C 96 138.9 104.7 138.8 108.1 138.1 C 113.6 136.8 118.9 134.5 122.5 131.8 C 126.6 128.6 128.4 126.9 131.5 122.8 C 135.2 118 138 110.6 138.4 104.7 C 138.6 102.7 138.5 102.5 138 102 C 137.5 101.5 137.3 101.5 133.4 101.5 C 129.4 101.5 129.3 101.5 128.9 102.1 C 128.7 102.4 128.5 103.1 128.5 103.7 C 128.5 106.4 126.5 112 124.3 115.4 C 123.9 115.9 123.5 116.7 123.3 117.1 C 123.1 117.4 121.6 119.1 119.9 120.7 C 117.4 123.1 116.4 123.9 114.3 125.1 C 109.5 127.7 105.4 128.8 100 128.9 C 96.1 128.9 93.7 128.5 90.2 127.1 C 80.9 123.5 74 115.1 72.2 105 C 71.8 102.4 71.8 97.6 72.4 95 C 74.3 85.5 79.7 78.4 88.3 74.1 C 91.8 72.3 95.6 71.3 98.4 71.3 C 99.5 71.3 99.9 71.1 100.4 70.6 L 101 70 L 100.9 66.3 C 100.6 61.6 100.6 61.5 98.3 61.5 C 97.4 61.5 95.7 61.7 94.6 61.9 M 99.6 63.1 C 99.7 63.4 99.8 64.9 99.8 66.6 C 100 70 99.9 70.3 98 70.3 C 95.2 70.3 90.5 71.7 86.8 73.6 C 78.9 77.9 73.2 85.6 71.4 94.7 C 70.7 97.9 71 104.5 71.8 107.8 C 74 116.3 79.4 123 86.9 126.8 C 93.1 129.8 99.3 130.7 105.9 129.4 C 116.1 127.3 124.5 120 128.1 110 C 128.9 107.9 129.5 105.1 129.5 103.9 C 129.5 102.6 129.8 102.5 133.5 102.5 C 137.6 102.5 137.6 102.5 137.4 104.9 C 136.5 113.4 131.7 122.5 125 128.4 C 118.1 134.5 109.5 137.8 100 137.8 C 94.2 137.8 88.5 136.4 83.4 133.8 C 79.4 131.8 77.5 130.5 74.2 127.3 C 69.7 123 66.8 118.3 64.9 112.3 C 63.3 107.4 62.9 105 62.9 100 C 63 93.5 63.9 89.5 66.6 83.9 C 68.6 79.9 70.2 77.6 73 74.6 C 78.8 68.5 85.4 64.8 93 63.3 C 96 62.7 96.7 62.6 98.3 62.5 C 99.3 62.5 99.5 62.6 99.6 63.1" />
+      </svg>
+      <p>Connecting to signalling server...</p>
+    </div>
+  </div>
+</template>
+<script>
+  export default (props, { $f7 }) =>
+  {
+    window.$f7 = $f7
+    return $render;
+  }
+</script>

@@ -1,0 +1,389 @@
+.logo {
+    background: url("/./icons/favicon.png");
+    background-size: contain;
+}
+
+.device-icon {
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 120px;
+    background: var(--f7-md-secondary-container);
+}
+
+
+.circle-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: black;
+    text-shadow: #fff 0px 0px 10px;
+    font-family: "Noto Color Emoji", sans-serif;
+}
+
+.small-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.device-icon label {
+    text-align: center;
+}
+
+.flex {
+    display: flex
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.large-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+}
+
+.background-opaque {
+    background-color: var(--f7-md-surface-1);
+}
+
+.margin-10px {
+    margin: 10px;
+}
+
+.display-none {
+    display: none;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.position-sticky {
+    position: sticky;
+}
+
+.z-index-10 {
+    z-index: 10;
+}
+
+.messagebar {
+    bottom: 80px;
+}
+
+.message {
+    max-width: 90%;
+    margin: auto;
+}
+
+.dark-only {
+    display: none
+}
+
+.dark .light-only {
+    display: none;
+}
+
+.dark .dark-only {
+    display: block;
+}
+
+.justify-content-space-between {
+    justify-content: space-between;
+}
+
+.drop-area-label {
+    position: absolute;
+    top: 0px;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 20px);
+    left: 0px;
+    border-radius: 20px;
+    border: 10px dashed var(--f7-theme-color);
+    color: var(--f7-theme-color);
+    font-size: 90px;
+    background: var(--f7-md-surface-1);
+    opacity: 50%;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.drop-area-active .drop-area-label {
+    display: flex;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 170px);
+    grid-template-rows: repeat(auto-fill, 150px);
+    padding-bottom: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
+.file {
+    display: flex;
+    padding: 5px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    max-width: 150px
+}
+
+.file-icon {
+    width: 125px;
+    height: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file .badge i {
+    font-size: 10px;
+}
+
+.modal {
+    z-index: 1001;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    background-color: #00000055;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-container {
+    position: fixed;
+    top: 10px;
+    max-width: min(calc(100vw - 20px), 700px);
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+}
+
+.modal-header {
+    padding: 10px;
+}
+
+.modal-body {
+    /*100vh - 120px - 60px - 20px - 40px, 40px is the margin*/
+    max-height: calc(100vh - 240px);
+    overflow: auto;
+}
+
+.modal-footer {
+    height: 60px;
+}
+
+#name-popover {
+    width: auto;
+    right: 0px;
+}
+
+#name-popover .popover-arrow {
+    left: unset;
+    right: 2dvb;
+}
+
+#notifications-panel,
+.panel-backdrop {
+    position: fixed;
+}
+
+#notifications-panel .notification {
+    position: static;
+}
+
+.notification {
+    font-size: medium;
+}
+
+/*Correctyly shows dialog even if page is scrolled down*/
+.dialog,
+.dialog-backdrop {
+    position: fixed;
+}
+
+/*f7 automatically adds these classes to a dialogs with 2, 3 and 4 buttons respectively*/
+.dialog-buttons-2,
+.dialog-buttons-3 .dialog-buttons-4 {
+    height: auto !important;
+    max-height: calc(100vh - 20px);
+    overflow: auto;
+}
+
+.dialog-buttons {
+    height: auto !important;
+    max-height: calc(100vh - 20px);
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.show-if-empty {
+    display: none
+}
+
+:only-child.show-if-empty {
+    display: block
+}
+
+#camera-controls {
+    position: fixed;
+    width: 60px;
+    /*150 px for header and footer*/
+    height: calc(100vh - 150px);
+    right: 0px;
+    /*60 px for header*/
+    top: 60px;
+    color: black;
+}
+
+#camera-controls .circle-icon {
+    background-color: white;
+}
+
+#camera-viewer-video {
+    max-width: calc(100vw);
+    max-height: calc(100vh - 150px);
+    z-index: 9;
+    position: relative;
+    margin: auto;
+
+}
+
+#camera-share {
+    width: calc(100vw);
+    height: calc(100vh - 150px);
+
+}
+
+#camera-share #exit-camera {
+    position: fixed;
+    /*60px for the header*/
+    top: 60px;
+    padding: 10px;
+    border-radius: 10px;
+    background: white;
+    color: black;
+}
+
+@keyframes recording-animation {
+    0% {
+        background-color: red;
+    }
+
+    50% {
+        background: white
+    }
+
+    100% {
+        background-color: red;
+    }
+}
+
+.recording-animation {
+    animation: recording-animation 0.5s linear 0s infinite alternate
+}
+
+#loader {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    background-color: var(--f7-md-secondary-container);
+}
+
+.squiggle-animation {
+    stroke-dasharray: 450;
+    animation: squiggle 5s linear 0s infinite;
+    --squiggle-color: var(--f7-md-on-secondary-container);
+}
+
+@keyframes squiggle {
+    0% {
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dashoffset: 450;
+    }
+
+    50.1% {
+        stroke-dashoffset: -450;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.guide-page.page-content {
+    background: url("/./images/poster.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.guide-page .poster-image {
+    width: 100vw;
+    height: calc(100vh - 400px);
+    background: transparent;
+}
+
+.guide-page .block-title {
+    color: #000;
+    font-size: 40px;
+    text-wrap: wrap;
+    line-height: 40px;
+    overflow: visible;
+    backdrop-filter: blur(100px);
+    margin: 0px;
+    padding: 20px;
+    top: 0px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.guide-page .block {
+    background: var(--f7-md-surface-1);
+    margin: 0px;
+}

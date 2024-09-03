@@ -1,0 +1,33 @@
+<template>
+  <div class="page" data-name="about">
+    <div class="navbar">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a href="#" class="link" id="go-back-out-of-guide">
+            <i class="material-icons">arrow_back</i>
+          </a>
+        </div>
+        <div class="title">Guide</div>
+      </div>
+    </div>
+    <div class="page-content guide-page">
+      <div class="poster-image"></div>
+      <div class="block-title">Guide to connecting devices though mobile hotspot</div>
+      <div class="block">
+        <p>Mobile hotspot is a feature found in almost all modern smartphones that allows one to share access to mobile data by setting up a temporary Local Area Network, wirelessly connecting devices that have the necessary credentials.</p>
+        <p>This can be helpful to quickly connect to nearby devices with orbit send. Without further ado, I will now proceed to explain how to set up mobile hotspot for Orbit send</p>
+        <p>The initial steps are similar but not exacly the same for all smartphone brands.</p>
+        <p>For iphones follow <a class="link external" href="https://support.apple.com/en-us/111785">this guide here</a></p>
+        <p>For an android phone, (almost all smartphones that are not iphones work with android os), <a class="link external" href="https://www.androidauthority.com/mobile-hotspot-setup-631280/">follow this guide</a></p>
+        <p>Ok, now that mobile hotspot has been setup, take note of the mobile hotspot network name and password. Let the person nearby who you want to share with know what the network name and password is. They can now connect to the wireless mobile hotspot network in the same way one can connect to a wifi network. (see <a href="https://www.linkedin.com/advice/1/how-can-you-connect-your-mobile-device-wi-fi-os3kf" class="link external">How can you connect your mobile device to a Wi-Fi network?</a> for more information)</p>
+        <p>Now, open the Orbit send website on both devices and the each device should be visible to the other. Each device is automatically assigned a three word name.</p>
+      </div>
+    </div>
+  </div>
+  </template>
+  <script>
+  export default () => {
+    return $render;
+  };
+  </script>

@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.f7": "html"
+  },
+  "javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+  "javascript.format.placeOpenBraceOnNewLineForFunctions": true
+}

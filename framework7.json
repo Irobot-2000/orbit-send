@@ -1,0 +1,18 @@
+{
+  "cwd": "/home/nilana/Documents",
+  "type": [
+    "web"
+  ],
+  "name": "Orbit Send",
+  "framework": "core",
+  "template": "tabs",
+  "bundler": "vite",
+  "cssPreProcessor": false,
+  "theming": {
+    "customColor": true,
+    "color": "#00ffc3",
+    "darkMode": false,
+    "iconFonts": true
+  },
+  "customBuild": false
+}
