@@ -738,117 +738,11 @@ export class CustomNotification
     }
 }
 
-// A class that provides a wrapper to the indexedDB api
-export class Database
-{
-    constructor(databaseName, objectStores)
-    {
-        // open the database
-        this.openRequest = indexedDB.open(databaseName, 1);
-        //this event is fired only once when database is created
-        this.openRequest.onupgradeneeded = (event) => this.initialize(event)
-        this.openRequest.onsuccess = (event) => this.startConnection(event)
-        //store the object stores foe future reference
-        this.objectStores = objectStores
-        this.transaction = null
-        // "this" inside an arrow function is the same as "this" outside it
-        this.connectionStarted = new Promise((resolve) =>
-        {
-            this.connectionStartedResolver = resolve
-        })
-    }
-    initialize(event)
-    {
-        // Initialize database structure
-        this.database = this.openRequest.result
-        for (var i = 0; i < this.objectStores.length; i++)
-        {
-            this.openRequest.result.createObjectStore(this.objectStores[i], {
-                keyPath: 'id'
-            });
-        }
-        this.connectionStartedResolver()
-    }
-    startConnection(event)
-    {
-        this.database = this.openRequest.result
-        this.connectionStartedResolver()
-    }
-    startTransaction()
-    {
-        if (!this.transaction)
-        {
-            this.transaction = this.database.transaction(this.objectStores, "readwrite")
-            this.transaction.oncomplete = () =>
-            {
-                this.transaction = null
-            }
-            this.transaction.onabort = () =>
-            {
-                this.transaction = null
-            }
-            this.transaction.onerror = () =>
-            {
-                this.transaction = null
-            }
-
-        }
-    }
-    async setItem(id, objectStoreName, data)
-    {
-        // Wait until the db is connected
-        await this.connectionStarted
-        this.startTransaction()
-        var objectStore = this.transaction.objectStore(objectStoreName)
-        return objectStore.put({
-            id: id,
-            data: data
-        })
-    }
-    async deleteItem(id, objectStoreName)
-    {
-        // Wait until the db is connected
-        await this.connectionStarted
-        this.startTransaction()
-        var objectStore = this.transaction.objectStore(objectStoreName)
-        return objectStore.delete(id)
-    }
-    async deleteObjectStore(objectStoreName)
-    {
-        // Wait until the db is connected
-        await this.connectionStarted
-        this.startTransaction()
-        var objectStore = this.transaction.objectStore(objectStoreName)
-        return objectStore.clear()
-    }
-    async getItem(id, objectStoreName)
-    {
-        await this.connectionStarted
-        this.startTransaction()
-        var objectStore = this.transaction.objectStore(objectStoreName)
-        var resultObj = await (objectStore.get(id))
-        var completed = new Promise((resolve) => resultObj.onsuccess = () =>
-        {
-            resolve()
-        })
-        await completed
-        //If there is a match
-        if (resultObj.result)
-        {
-            return resultObj.result.data
-        }
-        else
-        {
-            return undefined
-        }
-    }
-
-}
 
 export class ChatMessageManager
 {
 
-    constructor( chatEl, chatIconEl, mainPeerDisplayEl, peerNames, getUniqueIdOfPeer, sendMessage)
+    constructor( chatEl, chatIconEl, mainPeerDisplayEl, peerNames, sendMessage)
     {
         //the element where the chat menu and the chat messages are shown
         this.chatEl = chatEl
@@ -858,16 +752,11 @@ export class ChatMessageManager
         this.mainPeerDisplayEl = mainPeerDisplayEl
         //the object that maps peerId to peer names
         this.peerNames = peerNames
-        //An async function that returns unique id of peer
-        this.getUniqueIdOfPeer = getUniqueIdOfPeer
         //a function that sends a message to a peer
         //parameters : message, peerId
         //peerId = "" when no peer is selected
         this.sendMessage = sendMessage
-        this.db = new Database("message-data", ["messages", "meta"])
         this.history = {}
-        this.historyMetaData = {}
-        this.uniqueIds = {}
         this.peerUnreadCounts = {}
         //set current peer to none
         this.currentPeerId = ""
@@ -879,7 +768,7 @@ export class ChatMessageManager
         this.progressBar = newEl("div", ["progressbar", "progressbar-infinite"])
         this.progressBar.append(newEl("span"))
         this.peerDisplayHeader.append(newEl("h1", ["margin-10px"], { width: "100vw", "text-align": "center", "line-height": "20px" }, { innerText: "Available peers" }))
-        this.peerDisplayHeader.append(newEl("button", ["button", "button-tonal"], {}, { innerText: "Detete full history", onclick: () => this.deleteHistory() }))
+        this.peerDisplayHeader.append(newEl("button", ["button", "button-tonal"], {}, { innerText: "Clear full history", onclick: () => this.clearHistory() }))
         this.peerDisplayContainer.append(newEl("p", ["show-if-empty", "margin-10px"], {}, { innerText: "No peers avalable to chat with yet. Ask someone in the same network to visit this website." }))
         this.chatEl.append(this.messagesHeader, this.peerDisplayHeader, this.peerDisplayContainer, this.messagesContainer, this.messageBar)
 
@@ -888,37 +777,14 @@ export class ChatMessageManager
         this.showMessageBar()
     }
 
-    async getHistoryOfPeer(peerId)
+    async initializeHistoryOfPeer(peerId)
     {
-        //fetch unique id of peer if not already fetched
-        if (!this.uniqueIds[peerId])
-        {
-            this.uniqueIds[peerId] = await this.getUniqueIdOfPeer(peerId)
-        }
-        const uniqueId = this.uniqueIds[peerId]
         // if history already exists, exit function
         if (this.history[peerId])
         {
             return
         }
-        let msgIds = await this.db.getItem(uniqueId, "meta")
-        if (!msgIds)
-        {
-            //Set msgIds to [] if not already defined
-            msgIds = []
-        }
-        //Array to store 
-        let messages = []
-        for (const msgId of msgIds)
-        {
-            const message = await this.db.getItem(msgId, "messages")
-            messages.push(message)
-        }
-        // sort in ascdnding order of time
-        // newest last
-        messages.sort((a, b) => a.time - b.time)
-        this.history[peerId] = messages
-        this.historyMetaData[peerId] = msgIds
+        this.history[peerId] = []
     }
 
     async showChatContainer(peerId)
@@ -935,18 +801,18 @@ export class ChatMessageManager
             const returnIcon = newEl("i", ["material-icons", "margin-10px"], {}, { innerHTML: "arrow_back", onclick: () => this.showPeerDisplay() })
             const peerIcon = newEl("div", ["circle-icon"])
             const peerName = this.peerNames[peerId]
-            const deleteHistoryIcon = newEl("i", ["material-icons", "margin-10px"], {}, { innerHTML: "delete", onclick: () => this.deleteHistory(peerId) })
+            const clearHistoryIcon = newEl("i", ["material-icons", "margin-10px"], {}, { innerHTML: "delete", onclick: () => this.clearHistory(peerId) })
             setPeerIcon(peerIcon, peerName)
             const peerNameEl = newEl("p", ["margin-10px"], {}, { innerText: peerName })
             headerLeft.append(returnIcon, peerIcon, peerNameEl)
-            this.messagesHeader.append(headerLeft, deleteHistoryIcon)
+            this.messagesHeader.append(headerLeft, clearHistoryIcon)
             this.messagesHeader.dataset.id = peerId
             emptyEl(this.messagesContainer)
             this.messagesContainer.append(newEl("p", ["show-if-empty", "margin-10px"], {}, { innerText: "Messages sent and received will be displayed here" }))
         }
         this.chatEl.append(this.progressBar)
         this.messagesHeader.style.display = "flex"
-        await this.getHistoryOfPeer(peerId)
+        await this.initializeHistoryOfPeer(peerId)
         this.progressBar.style.display = "none"
         this.chatEl.classList.add("messages")
         this.messagesContainer.style.display = "block"
@@ -990,38 +856,27 @@ export class ChatMessageManager
         $f7.el.scrollTop = $f7.el.scrollHeight;
 
     }
-    async deleteHistory(peerId)
+    async clearHistory(peerId)
     {
         if (!peerId)
         {
             //if no peerId was passed
-            const response = await customConfirm("Delete full chat history", "Are you sure you want to delete chat history for all peers? this action is not reversible", ["No, DO NOT DELETE", "yes, DELETE HISTORY"])
+            const response =  await customConfirm("Clear full chat history", "Are you sure you want to clear chat history for all peers? this action is not reversible", ["No, DO NOT CLEAR", "yes, CLEAR HISTORY"])
             if (response == 1)
             {
-                //If second response, delete all of the peer history
-                this.db.deleteObjectStore("messages")
-                this.db.deleteObjectStore("meta")
+                //If second response, clear all of the peer history
+                this.history = {}
+                
             }
+            //Ensure that the chat will be erased the next time it is opened
+            this.messagesHeader.dataset.id = ""
         }
         else
         {
-            const response = await customConfirm("Delete chat history for " + this.peerNames[peerId], "Are you sure you want to delete chat history for this peer? this action is not reversible", ["No, DO NOT DELETE", "yes, DELETE PEER HISTORY"])
+            const response = await customConfirm("Clear chat history for " + this.peerNames[peerId], "Are you sure you want to clear chat history for this peer? this action is not reversible", ["No, DO NOT CLEAR", "yes, CLEAR PEER HISTORY"])
             if (response == 1)
             {
-                if (!this.uniqueIds[peerId])
-                {
-                    //If the unique id has not been found
-                    this.uniqueIds[peerId] = await this.getUniqueIdOfPeer(peerId)
-                }
-                //If second response, delete all of the peer history
-                const uniqueId = this.uniqueIds[peerId]
-                const messageIds = this.db.getItem(uniqueId, "meta")
-                for (const messageId in messageIds)
-                {
-                    this.db.deleteItem(messageId, "messages")
-                }
-                this.db.deleteItem(uniqueId, "meta")
-                this.history[peerId] = {}
+                this.history[peerId] = []
                 if (peerId == this.currentPeerId)
                 {
                     emptyEl(this.messagesContainer)
@@ -1128,16 +983,10 @@ export class ChatMessageManager
             badge.style.display = "none"
         }
     }
-    async addMessage(peerId, message, sent)
+     addMessage(peerId, message, sent)
     {
-        console.log(sent)
-        await this.getHistoryOfPeer(peerId)
+        this.initializeHistoryOfPeer(peerId)
         const timestamp = Date.now()
-        const messageId = generateUniqueID()
-        const messageObj = { sent, timestamp, text: message }
-        await this.db.setItem(messageId, "messages", messageObj)
-        this.historyMetaData[peerId].push(messageId)
-        await this.db.setItem(this.uniqueIds[peerId], "meta", this.historyMetaData[peerId])
         this.history[peerId].push({ sent, timestamp, text: message })
         //if the chat window is open
         if (this.currentPeerId == peerId)

@@ -4,6 +4,8 @@
 // or to broadcast to all devices with the same public ip
 //  data = "BROADCAST_SIGNAL<3-char action><data>"
 // This is a slightly modified version of https://github.com/weisrc/rooms/blob/main/mod.ts
+// I got the idea to use public ip addresses to group devices from 
+// this stack overflow page https://stackoverflow.com/questions/32171367/webrtc-on-local-network
 const rooms: Record<string, Set<WebSocket>> = {};
 // roomIds maps an id to its associated websocket in a room
 const roomIds: Record<string, Record<string, WebSocket>> = {};

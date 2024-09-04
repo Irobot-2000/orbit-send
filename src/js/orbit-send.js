@@ -22,8 +22,6 @@ async function main()
   const FILE_REQUEST_ACKNOWLEDGEMENT = 'fre'
 
   //2) Chat
-  const CHAT_IDENTIFICATION_REQUEST = "cir"
-  const CHAT_IDENTIFICATION_INFO = "cii"
   const CHAT_MESSAGE = "cme"
   const CHAT_MESSAGE_ACKNOWLEDGEMENT = "cma"
   const CHAT_MESSAGE_DECLINE = "cmd"
@@ -79,9 +77,9 @@ async function main()
   let chatEl = helpers.getEl("#chat-share")
   const mainPeerDisplayEl = helpers.getEl("#main-peer-display")
   const chatIcon = helpers.getEl("#chat-share-icon")
-  //The two functions are kept empty for now.
-  //They will be defined later
-  let chatManager = new helpers.ChatMessageManager(chatEl, chatIcon, mainPeerDisplayEl, peerNames, () => { }, () => { })
+  //The send function is kept empty for now.
+  //It will be defined later
+  let chatManager = new helpers.ChatMessageManager(chatEl, chatIcon, mainPeerDisplayEl, peerNames, () => { })
 
   //Initialize the camera manager
   let videoEl = helpers.getEl("#camera-viewer-video")
@@ -647,10 +645,7 @@ async function main()
 
       }
 
-      else if (message.action == CHAT_IDENTIFICATION_REQUEST)
-      {
-        sendUniqueId(message,peerId)
-      }
+
       else if (message.action == CAMERA_SHARE_REQUEST)
       {
         if (!peerData[peerId].alwaysRejectCameraAccess)
@@ -950,40 +945,11 @@ async function main()
     }
 
   }
-  async function getUniqueId(peerId)
-  {
-    let publicId = helpers.getCookie("publicId")
-    if (!publicId)
-    {
-      publicId = helpers.generateUniqueID()
-      helpers.setCookie("publicId", publicId)
-    }
-    await connectToPeer(peerId)
-    peers[peerId].send(CHAT_IDENTIFICATION_REQUEST + JSON.stringify(publicId))
-    let msg = await helpers.eventPromise(peerData[peerId], CHAT_IDENTIFICATION_INFO)
-    return msg.dataObj
-  }
 
-  async function sendUniqueId(request, peerId)
-  {
-    let publicId = helpers.getCookie("publicId")
-    if (!publicId)
-    {
-      publicId = helpers.generateUniqueID()
-      helpers.setCookie("publicId", publicId)
-    }
-    let privateId = helpers.getCookie("privateId")
-    if (!privateId)
-    {
-      privateId = helpers.generateUniqueID()
-      helpers.setCookie("privateId", privateId)
-    }
-    const id = await helpers.sha512(request.dataObj + privateId) + publicId
-    peers[peerId].send(CHAT_IDENTIFICATION_INFO + JSON.stringify(id))
-  }
+
+
 
   chatManager.sendMessage = sendChatMessage
-  chatManager.getUniqueIdOfPeer = getUniqueId
 
   document.addEventListener("newPeerEvent", () =>
   {
