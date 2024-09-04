@@ -1,5 +1,5 @@
 const SIGNALLING_SERVER = "wss://fresh-hare-95.deno.dev"
-//const SIGNALLING_SERVER = "ws://nilana-pc:8000/"
+//const SIGNALLING_SERVER = "ws://0.0.0.0:8000/"
 
 //Header size in characters
 // Signals are in the form <HEADER><ACTION><DATA>

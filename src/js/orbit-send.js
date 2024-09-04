@@ -35,7 +35,7 @@ async function main()
   //Notifications are visible for 3 seconds before they disappear
   const NOTIFICATION_ACTIVE_TIME = 3000
   //File constants
-  //roughly 100MB in one batch
+  //roughly 16MB in one batch
   const FILE_MAX_PACKETS_IN_BATCH = 1000
   const FILE_PACKET_SIZE = 16000
   //3 bytes for the action, 4 for the packet number
