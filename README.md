@@ -1,5 +1,10 @@
 # orbit-send
+
+### Description:
 A web application that allows sharing (of files/text/camera access) over a local network, through webrtc (with the [simple-peer.js library](https://github.com/feross/simple-peer/))
+
+This project is being hosted with [cloudfare pages](https://pages.cloudflare.com/). You can try out orbit send at [orbit-send.pages.dev](http://orbit-send.pages.dev)
+(The backend signalling server is hosted with [deno deploy](https://deno.com/deploy) at wss://fresh-hare-95.deno.dev)
 
 ![screenshot](./assets-src/screenshot.webp)
 
@@ -84,3 +89,17 @@ This contains many helper functions that I wrote along with, more importantly, t
 
 ### signal.js
 This js file contains the scripts that enables a web socket connection between the signalling server and the browser. This connection only sends the Peer Ids, peer Names and webRTC  signalling data. No part of the files, media streams or text sent pass through this server.
+
+#  credits
+
+The logo and the name were designed by google's Gemini ai, Although I modified things a bit.
+
+This program would not have been possible without the following libraries:
+
+[simple-peer](https://github.com/feross/simple-peer/)
+
+[native-file-system-adapter(ponyfill) library](https://www.npmjs.com/package/native-file-system-adapter?activeTab=readme)
+
+[Framework7](https://framework7.io/)
+
+[web-streams-polyfill](https://www.npmjs.com/package/web-streams-polyfill?activeTab=readme)

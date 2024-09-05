@@ -794,6 +794,7 @@ async function main()
               while (true)
               {
                 //await helpers.wait(1000)
+                await sendPacket(file, peer, packetsInBatch + i - 1, totalPackets, action)
                 peer.send(FILE_REQUEST_ACKNOWLEDGEMENT)
                 let message = await Promise.any([
                   helpers.eventPromise(peerData[peerId], FILE_ACKNOWLEDEMENT),
