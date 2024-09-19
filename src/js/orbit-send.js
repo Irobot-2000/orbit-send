@@ -40,7 +40,8 @@ async function main()
   const FILE_PACKET_SIZE = 16000
   //3 bytes for the action, 4 for the packet number
   const FILE_PACKET_HEADER_SIZE = 3 + 4
-
+  // Time in ms waited before sending a missing packet message, to ensure that no more pacets are received
+  const FILE_WAIT_FOR_MISSING_PACKETS_INTERVAL = 10
   let peers = {}
   let peerData = {}
   let peerNames = {}
@@ -501,6 +502,15 @@ async function main()
         let missingPackets = []
         let hasReceivedPacketNo = peerData[peerId].fileData.hasReceivedPacketNo
         const batchStartPacketNo = peerData[peerId].fileData.batchStartPacketNo
+        let oldMissingCount = 0
+        let newMissingCount = hasReceivedPacketNo.length - (peerData[peerId].fileData.receivedPackets - peerData[peerId].fileData.batchStartPacketNo)
+        while (newMissingCount > 0 && newMissingCount != oldMissingCount)
+        {
+          await helpers.wait(10)
+          oldMissingCount = newMissingCount
+          newMissingCount = hasReceivedPacketNo.length - (peerData[peerId].fileData.receivedPackets - peerData[peerId].fileData.batchStartPacketNo)
+
+        }
         for (let i = 0; i < hasReceivedPacketNo.length; i++)
         {
           //If packet not received
@@ -1057,4 +1067,3 @@ async function start()
 }
 
 document.addEventListener("DOMContentLoaded", start);
-
