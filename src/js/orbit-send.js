@@ -117,7 +117,14 @@ async function main()
     {
       let name = helpers.generatedNameToReadableFormat(generatedName)
       displayName(name)
-      helpModal(name)
+      //Attach click event to help icon
+      const helpIcon = helpers.getEl("#help-icon")
+      helpIcon.onclick = () => helpModal(name)
+      if (helpers.getCookie("do-not-show-startup-modal") != "true")
+      {
+        helpModal(name)
+      }
+      closeLoader()
     }
   )
   //The theme change icon is handled in js
@@ -338,20 +345,40 @@ async function main()
 
 
   }
-  function helpModal(name)
+  function closeLoader()
   {
     const loaderEl = helpers.getEl("#loader")
+    loaderEl.style.display = "none"
+  }
+  function helpModal(name)
+  {
     const introductionModal = helpers.getEl("#introduction-modal")
     const hiddenEl = helpers.getEl("#hidden")
-    const helpIcon = helpers.getEl("#help-icon")
     const selfIcon = helpers.getEl("#insert-icon-here")
     helpers.setPeerIcon(selfIcon, name)
     const selfName = helpers.getEl("#insert-name-here")
     selfName.innerText = name
-    helpIcon.onclick = () => helpModal(name)
+    //Set the checkbox to the current value
+    const doNotShowAgainCheckbox = helpers.getEl("#do-not-show-startup-modal")
+    if (helpers.getCookie("do-not-show-startup-modal") == "true")
+    {
+      doNotShowAgainCheckbox.checked = true
+    }
+    else
+    {
+      doNotShowAgainCheckbox.checked = false 
+    }
     //Function to exit the modal
     const exitModal = () =>
     {
+      if (doNotShowAgainCheckbox.checked == true)
+      {
+        helpers.setCookie("do-not-show-startup-modal", "true")
+      }
+      else
+      {
+        helpers.setCookie("do-not-show-startup-modal", "false")
+      }
       // This automatically unappends the modal from the body first
       hiddenEl.append(introductionModal)
     }
@@ -371,7 +398,6 @@ async function main()
       el.onclick = () => { exitModal(); openGuidePage() }
     })
     document.body.append(introductionModal)
-    loaderEl.style.display = "none"
   }
 
   async function openGuidePage()
@@ -506,21 +532,22 @@ async function main()
         let newMissingCount = hasReceivedPacketNo.length - (peerData[peerId].fileData.receivedPackets - peerData[peerId].fileData.batchStartPacketNo)
         while (newMissingCount > 0 && newMissingCount != oldMissingCount)
         {
-          await helpers.wait(10)
+          await helpers.wait(FILE_WAIT_FOR_MISSING_PACKETS_INTERVAL)
           oldMissingCount = newMissingCount
           newMissingCount = hasReceivedPacketNo.length - (peerData[peerId].fileData.receivedPackets - peerData[peerId].fileData.batchStartPacketNo)
 
         }
-        for (let i = 0; i < hasReceivedPacketNo.length; i++)
+
+        if (newMissingCount > 0)
         {
-          //If packet not received
-          if (!hasReceivedPacketNo[i])
+          for (let i = 0; i < hasReceivedPacketNo.length; i++)
           {
-            missingPackets.push(batchStartPacketNo + i)
+            //If packet not received
+            if (!hasReceivedPacketNo[i])
+            {
+              missingPackets.push(batchStartPacketNo + i)
+            }
           }
-        }
-        if (missingPackets.length > 0)
-        {
           //Notify the sender what packets are missing
           peer.send(MISSING_PACKETS + JSON.stringify(missingPackets))
         }

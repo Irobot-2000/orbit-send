@@ -130,8 +130,8 @@
             </div>
           </div>
           <div id="selector-peer-display" class="modal-body grid">
-            <p class="show-if-empty margin-10px">No peers available yet. Ask someone in the same network to visit this
-              website.</p>
+            <p class="show-if-empty margin-10px">No peers available yet. Ask someone in the same network to open the orbit send app, or visit the
+              website at <a href="https://orbit-send.pages.dev">orbit-send.pages.dev</a>.</p>
           </div>
           <div class="modal-footer flex flex-row ">
             <button class="button button-tonal margin-10px" id="peer-send">Send</button>
@@ -144,15 +144,15 @@
             <h1 class="margin-10px">Welcome to Orbit Send!</h1>
             <i class="material-icons close-introduction-modal">close</i>
           </div>
-          <p class="margin-10px">This is a website that allows you to share files, text, or camera access to devices in
+          <p class="margin-10px">This is a website / app that allows you to share files, text, or camera access to devices in
             the same local area network, so it should be possible to share data to devices nearby.</p>
-          <p class="margin-10px">If this is your first time visiting this website you could take part in the automated <a class="link guided-tour-button">guided tour</a>.</p>
+          <p class="margin-10px">If this is your first time visiting this website / app you could take part in the automated <a class="link guided-tour-button">guided tour</a>.</p>
           <p class="margin-10px">Don't have a secure wifi network nearby? Follow <a class="link guide-page-link">this guide</a> to connect devices through
             mobile hotspot.</p>
           <p class="margin-10px">Please note that two devices connected to the internet through mobile data cannot
             directly communicate here, however nearby they are. You will have to follow <a class="link guide-page-link" >this guide</a> to get 
             them to the same mobile hotspot network or connect both devices to the same wifi network.</p>
-            <p class="margin-10px">This website is open source. Read the <a class="link external" href="https://github.com/Irobot-2000/orbit-send">source code at github</a></p>
+            <p class="margin-10px">This website / app is open source. Read the <a class="link external" href="https://github.com/Irobot-2000/orbit-send">source code at github</a></p>
           <p class="margin-10px">Thank you for choosing Orbit Send. Files and text transferred in this website are
             tranferred directly between the sender and receiver without passing through a server.</p>
           <div class="flex flex-row align-items-center justify-content-center">
@@ -161,6 +161,17 @@
               <div class="circle-icon" id="insert-icon-here"></div>
               <div id="insert-name-here"></div>
             </div>
+          </div>
+          <div class="margin-10px flex flex-row">
+            <label class="checkbox">
+              <!-- checkbox input -->
+              <input type="checkbox" id="do-not-show-startup-modal"/>
+              <!-- checkbox icon -->
+              <i class="icon-checkbox"></i>
+            </label>
+            \u00A0\u00A0
+            Do not show this modal on startup
+
           </div>
           <div class="modal-footer flex flex-row">
             <button class="button button-tonal guided-tour-button margin-10px">Show guided tour</button>
