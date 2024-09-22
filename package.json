@@ -12,6 +12,10 @@
     "postinstall": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./src/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./src/fonts/"
   },
   "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
+    "capacitor-share-extension": "^3.0.0",
     "dom7": "^4.0.6",
     "framework7": "^8.3.3",
     "material-icons": "^1.13.12",
@@ -20,6 +24,8 @@
     "web-streams-polyfill": "^4.0.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2",
     "cpy-cli": "^5.0.0",
     "cross-env": "^7.0.3",
     "postcss-preset-env": "^10.0.0",

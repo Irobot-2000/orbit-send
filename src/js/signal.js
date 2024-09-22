@@ -1,3 +1,4 @@
+import * as helpers from "/js/helpers.js"
 const SIGNALLING_SERVER = "wss://fresh-hare-95.deno.dev"
 //const SIGNALLING_SERVER = "ws://0.0.0.0:8000/"
 
@@ -65,18 +66,31 @@ class Signal
             this.conn.close()
         })
     }
-    sendTo(receiver, data)
+    async sendTo(receiver, data)
     {
+        await this.reconnectIfDisconnected()
         console.log(receiver)
         this.conn.send(receiver.padStart(SIGNAL_HEADER_SIZE, '0') + "mes" + JSON.stringify(data))
     }
-    broadcast(data)
+    async broadcast(data)
     {
+        await this.reconnectIfDisconnected()
         this.conn.send(BROADCAST_HEADER + "mes" + JSON.stringify(data))
     }
-    sendInit(senderId)
+    async sendInit(senderId)
     {
+        await this.reconnectIfDisconnected()
         this.conn.send(senderId + "ini")
+    }
+
+    async reconnectIfDisconnected()
+    {
+        if (this.conn.readyState == WebSocket.CLOSED)
+        {
+            this.conn = new WebSocket(SIGNALLING_SERVER)
+            await helpers.eventPromise(this.conn,"open")
+            this.onopen()
+        }
     }
 
 }

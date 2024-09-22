@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">orbit send</string>
+    <string name="title_activity_main">orbit send</string>
+    <string name="package_name">com.example.ff9945bf29074553bb5ef49ccfe2a215</string>
+    <string name="custom_url_scheme">com.example.ff9945bf29074553bb5ef49ccfe2a215</string>
+</resources>
